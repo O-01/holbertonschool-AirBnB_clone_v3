@@ -2,8 +2,8 @@
 """
 Contains the FileStorage class
 """
-
 import json
+import models
 from models.amenity import Amenity
 from models.base_model import BaseModel
 from models.city import City
@@ -11,10 +11,16 @@ from models.place import Place
 from models.review import Review
 from models.state import State
 from models.user import User
-from models import storage
 
-classes = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City,
-           "Place": Place, "Review": Review, "State": State, "User": User}
+classes = {
+    "BaseModel": BaseModel,
+    "Amenity": Amenity,
+    "City": City,
+    "Place": Place,
+    "Review": Review,
+    "State": State,
+    "User": User
+}
 
 
 class FileStorage:
@@ -72,12 +78,12 @@ class FileStorage:
 
     def get(self, cls, id):
         """retrieve one object based on cls and id"""
-        if cls in classes:
-            key = f'{cls}.{id}'
-            obj_dict = storage.all(classes[cls])
+        if cls.__name__ in classes:
+            key = f'{cls.__name__}.{id}'
+            obj_dict = models.storage.all(classes[cls.__name__])
             for item in obj_dict.keys():
                 if item == key:
-                    req_obj = storage.all()[item]
+                    req_obj = models.storage.all()[item]
             if req_obj is not None:
                 return req_obj
             else:
@@ -91,10 +97,8 @@ class FileStorage:
         or count of all objects if no class given
         """
         if cls is not None:
-            if cls in classes:
-                obj_dict = storage.all(classes[cls])
-            else:
-                return None
+            if cls.__name__ in classes:
+                obj_dict = models.storage.all(classes[cls.__name__])
         else:
-            obj_dict = storage.all()
+            obj_dict = models.storage.all()
         return len(obj_dict)
