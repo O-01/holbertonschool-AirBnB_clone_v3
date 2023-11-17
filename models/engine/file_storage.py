@@ -90,3 +90,11 @@ class FileStorage:
         counts number of objects of a given class,
         or count of all objects if no class given
         """
+        if cls is not None:
+            if cls in classes:
+                obj_dict = storage.all(classes[cls])
+            else:
+                return None
+        else:
+            obj_dict = storage.all()
+        return len(obj_dict)
