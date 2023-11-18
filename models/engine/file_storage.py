@@ -80,6 +80,7 @@ class FileStorage:
         if cls.__name__ in classes:
             key = f'{cls.__name__}.{id}'
             obj_dict = self.all(classes[cls.__name__])
+            req_obj = None
             for item in obj_dict.keys():
                 if item == key:
                     req_obj = self.all()[item]
