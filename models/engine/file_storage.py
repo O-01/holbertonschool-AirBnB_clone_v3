@@ -3,7 +3,6 @@
 Contains the FileStorage class
 """
 import json
-import models
 from models.amenity import Amenity
 from models.base_model import BaseModel
 from models.city import City
@@ -80,10 +79,10 @@ class FileStorage:
         """retrieve one object based on cls and id"""
         if cls.__name__ in classes:
             key = f'{cls.__name__}.{id}'
-            obj_dict = models.storage.all(classes[cls.__name__])
+            obj_dict = self.all(classes[cls.__name__])
             for item in obj_dict.keys():
                 if item == key:
-                    req_obj = models.storage.all()[item]
+                    req_obj = self.all()[item]
             if req_obj is not None:
                 return req_obj
             else:
@@ -98,7 +97,7 @@ class FileStorage:
         """
         if cls is not None:
             if cls.__name__ in classes:
-                obj_dict = models.storage.all(classes[cls.__name__])
+                obj_dict = self.all(classes[cls.__name__])
         else:
-            obj_dict = models.storage.all()
+            obj_dict = self.all()
         return len(obj_dict)
