@@ -20,13 +20,13 @@ classes = {
 }
 
 
-@app_views.route('/status')
+@app_views.route('/status', methods=['GET'], strict_slashes=False)
 def status_index():
     """returns json status"""
     return jsonify(status="OK")
 
 
-@app_views.route('/stats')
+@app_views.route('/stats', methods=['GET'], strict_slashes=False)
 def stats():
     """returns json stats for all objects"""
     stats = {
