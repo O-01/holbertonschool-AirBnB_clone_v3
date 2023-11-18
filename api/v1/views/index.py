@@ -31,7 +31,7 @@ def stats():
     """returns json stats for all objects"""
     stats = {
         "amenities": storage.count(Amenity),
-        "city": storage.count(City),
+        "cities": storage.count(City),
         "places": storage.count(Place),
         "reviews": storage.count(Review),
         "states": storage.count(State),
