@@ -98,7 +98,7 @@ class FileStorage:
         """
         if cls is not None:
             if cls.__name__ in classes:
-                obj_dict = self.all(classes[cls.__name__])
+                objs = self.all(classes[cls.__name__]).values()
         else:
-            obj_dict = self.all()
-        return len(obj_dict)
+            objs = self.all().values()
+        return len(objs)
