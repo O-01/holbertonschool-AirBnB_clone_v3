@@ -2,22 +2,25 @@
 """
 Contains the class DBStorage
 """
-
-import models
 from models.amenity import Amenity
-from models.base_model import BaseModel, Base
+from models.base_model import Base
 from models.city import City
 from models.place import Place
 from models.review import Review
 from models.state import State
 from models.user import User
 from os import getenv
-import sqlalchemy
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-classes = {"Amenity": Amenity, "City": City,
-           "Place": Place, "Review": Review, "State": State, "User": User}
+classes = {
+    "Amenity": Amenity,
+    "City": City,
+    "Place": Place,
+    "Review": Review,
+    "State": State,
+    "User": User
+}
 
 
 class DBStorage:
@@ -32,11 +35,15 @@ class DBStorage:
         HBNB_MYSQL_HOST = getenv('HBNB_MYSQL_HOST')
         HBNB_MYSQL_DB = getenv('HBNB_MYSQL_DB')
         HBNB_ENV = getenv('HBNB_ENV')
-        self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'.
-                                      format(HBNB_MYSQL_USER,
-                                             HBNB_MYSQL_PWD,
-                                             HBNB_MYSQL_HOST,
-                                             HBNB_MYSQL_DB))
+        self.__engine = create_engine(
+            'mysql+mysqldb://{}:{}@{}/{}'.
+            format(
+                HBNB_MYSQL_USER,
+                HBNB_MYSQL_PWD,
+                HBNB_MYSQL_HOST,
+                HBNB_MYSQL_DB
+            )
+        )
         if HBNB_ENV == "test":
             Base.metadata.drop_all(self.__engine)
 
@@ -74,3 +81,30 @@ class DBStorage:
     def close(self):
         """call remove() method on the private session attribute"""
         self.__session.remove()
+
+    def get(self, cls, id):
+        """retrieve one object based on cls and id"""
+        if cls.__name__ in classes:
+            key = f'{cls.__name__}.{id}'
+            obj_dict = self.all(classes[cls.__name__])
+            for item in obj_dict.keys():
+                if item == key:
+                    req_obj = self.all()[item]
+            if req_obj is not None:
+                return req_obj
+            else:
+                return None
+        else:
+            return None
+
+    def count(self, cls=None):
+        """
+        counts number of objects of a given class,
+        or count of all objects if no class given
+        """
+        if cls is not None:
+            if cls.__name__ in classes:
+                obj_dict = self.all(classes[cls.__name__])
+        else:
+            obj_dict = self.all()
+        return len(obj_dict)
