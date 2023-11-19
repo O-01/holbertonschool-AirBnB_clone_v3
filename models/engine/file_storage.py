@@ -77,16 +77,15 @@ class FileStorage:
 
     def get(self, cls, id):
         """retrieve one object based on cls and id"""
-        if cls.__name__ in classes:
-            key = f'{cls.__name__}.{id}'
-            obj_dict = self.all(classes[cls.__name__])
-            req_obj = None
-            for item in obj_dict.keys():
-                if item == key:
-                    req_obj = self.all()[item]
-            if req_obj is not None:
+        if cls in classes.values():
+            try:
+                req_obj = next(
+                    value
+                    for value in self.all(cls).values()
+                    if value.id == id
+                )
                 return req_obj
-            else:
+            except StopIteration:
                 return None
         else:
             return None
