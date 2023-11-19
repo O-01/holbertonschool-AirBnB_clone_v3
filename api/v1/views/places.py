@@ -60,7 +60,7 @@ def places_delete(place_id):
     strict_slashes=False
 )
 def places_post(city_id):
-    """Creates State object upon POST request"""
+    """Creates Place object upon POST request"""
     city = storage.get(City, city_id)
     if city is None:
         abort(404)
@@ -81,7 +81,7 @@ def places_post(city_id):
 
 @app_views.route('/places/<place_id>', methods=['PUT'], strict_slashes=False)
 def places_put(place_id):
-    """Updates specified State object if found upon PUT request"""
+    """Updates specified Place object if found upon PUT request"""
     place = storage.get(Place, place_id)
     if place is None:
         abort(404)

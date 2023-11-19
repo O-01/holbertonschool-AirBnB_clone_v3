@@ -42,7 +42,7 @@ def reviews_get(review_id):
         strict_slashes=False
     )
 def reviews_delete(review_id):
-    """Deletes specified Place object if found upon DELETE request"""
+    """Deletes specified Review object if found upon DELETE request"""
     review = storage.get(Review, review_id)
     if review is None:
         abort(404)
@@ -58,7 +58,7 @@ def reviews_delete(review_id):
     strict_slashes=False
 )
 def reviews_post(place_id):
-    """Creates Place object upon POST request"""
+    """Creates Review object upon POST request"""
     place = storage.get(Place, place_id)
     if place is None:
         abort(404)
@@ -79,7 +79,7 @@ def reviews_post(place_id):
 
 @app_views.route('/reviews/<review_id>', methods=['PUT'], strict_slashes=False)
 def reviews_put(review_id):
-    """Updates specified Place object if found upon PUT request"""
+    """Updates specified Review object if found upon PUT request"""
     review = storage.get(Review, review_id)
     if review is None:
         abort(404)
