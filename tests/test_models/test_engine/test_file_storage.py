@@ -128,15 +128,32 @@ class TestFileStorage(unittest.TestCase):
     @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
     def test_get(self):
         """Test that get properly retrieves expected key"""
-        with self.assertRaises(StopIteration):
-            obj = next(
-                val for val in models.storage.all().values()
-                if val is not None
-            )
-            print(obj)
-        self.assertEqual(models.storage.get(City, 'test'), None)
+        obj = City()
+        obj.save()
+        self.assertEqual(
+            models.storage.get(City, obj.id).id, obj.id
+        )
+        obj.delete()
 
     @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
     def test_count(self):
         """Test that count properly retrieves number of requested objects"""
-        self.assertTrue(type(models.storage.count()) is int)
+        count1 = models.storage.count()
+        city_count1 = models.storage.count(City)
+        obj = City()
+        obj.save()
+        count2 = models.storage.count()
+        city_count2 = models.storage.count(City)
+        self.assertTrue(type(count1) is int)
+        self.assertTrue(type(city_count1) is int)
+        self.assertTrue(type(count2) is int)
+        self.assertTrue(type(city_count2) is int)
+        self.assertGreater(count2, count1)
+        obj.delete()
+        count3 = models.storage.count()
+        city_count3 = models.storage.count(City)
+        self.assertTrue(type(count3) is int)
+        self.assertTrue(type(city_count3) is int)
+        self.assertEqual(count1, count3)
+        self.assertEqual(city_count1, city_count3)
+        obj.delete()
