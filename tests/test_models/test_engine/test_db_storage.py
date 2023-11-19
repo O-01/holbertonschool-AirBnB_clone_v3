@@ -107,15 +107,71 @@ class TestFileStorage(unittest.TestCase):
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_get(self):
         """Test that get properly retrieves expected key"""
-        with self.assertRaises(StopIteration):
-            obj = next(
-                val for val in models.storage.all().values()
-                if val is not None
-            )
-            print(obj)
-        self.assertEqual(models.storage.get(City, 'test'), None)
+        obj = User(
+            first_name='James',
+            last_name='Franco',
+            email='test@test.com',
+            password='pwd'
+        )
+        models.storage.new(obj)
+        models.storage.save()
+        grab = models.storage.get(User, obj.id)
+        self.assertEqual(grab, obj)
 
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_count(self):
         """Test that count properly retrieves number of requested objects"""
-        self.assertTrue(type(models.storage.count()) is int)
+        count1 = models.storage.count()
+        user_count1 = models.storage.count(User)
+        obj1 = User(
+            first_name='James',
+            last_name='Franco',
+            email='test@test.com',
+            password='pwd'
+        )
+        models.storage.new(obj1)
+        models.storage.save()
+        count2 = models.storage.count()
+        user_count2 = models.storage.count(User)
+        self.assertTrue(type(count1) is int)
+        self.assertTrue(type(user_count1) is int)
+        self.assertTrue(type(count2) is int)
+        self.assertTrue(type(user_count2) is int)
+        self.assertGreater(count2, count1)
+        self.assertGreater(user_count2, user_count1)
+        obj2 = User(
+            first_name='Vin',
+            last_name='Diesel',
+            email='test@test1.com',
+            password='pwd1'
+        )
+        models.storage.new(obj2)
+        models.storage.save()
+        count3 = models.storage.count()
+        user_count3 = models.storage.count(User)
+        self.assertEqual(len(models.storage.all()), count3)
+        self.assertEqual(len(models.storage.all(User)), user_count3)
+        self.assertTrue(type(count2) is int)
+        self.assertTrue(type(user_count2) is int)
+        self.assertTrue(type(count3) is int)
+        self.assertTrue(type(user_count3) is int)
+        self.assertGreater(count3, count2)
+        self.assertGreater(user_count3, user_count2)
+        models.storage.delete(obj2)
+        count4 = models.storage.count()
+        user_count4 = models.storage.count(User)
+        self.assertTrue(type(count4) is int)
+        self.assertTrue(type(user_count4) is int)
+        self.assertEqual(count4, count2)
+        self.assertEqual(user_count4, user_count2)
+        self.assertLess(count4, count3)
+        self.assertLess(user_count4, user_count3)
+        models.storage.delete(obj1)
+        count5 = models.storage.count()
+        user_count5 = models.storage.count(User)
+        self.assertTrue(type(count5) is int)
+        self.assertTrue(type(user_count5) is int)
+        self.assertEqual(count5, count1)
+        self.assertEqual(user_count5, user_count1)
+        self.assertLess(count5, count4)
+        self.assertLess(user_count5, user_count4)

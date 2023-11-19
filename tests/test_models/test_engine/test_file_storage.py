@@ -133,7 +133,6 @@ class TestFileStorage(unittest.TestCase):
         self.assertEqual(
             models.storage.get(City, obj.id).id, obj.id
         )
-        obj.delete()
 
     @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
     def test_count(self):
@@ -156,4 +155,3 @@ class TestFileStorage(unittest.TestCase):
         self.assertTrue(type(city_count3) is int)
         self.assertEqual(count1, count3)
         self.assertEqual(city_count1, city_count3)
-        obj.delete()
