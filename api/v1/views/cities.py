@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-""" """
+"""API cities view"""
 from api.v1.views import app_views
 from flask import abort, jsonify, make_response, request
 from models import storage
@@ -37,7 +37,7 @@ def cities_get(city_id):
 
 @app_views.route('/cities/<city_id>', methods=['DELETE'], strict_slashes=False)
 def cities_delete(city_id):
-    """Deletes specified State object if found upon DELETE request"""
+    """Deletes specified City object if found upon DELETE request"""
     city = storage.get(City, city_id)
     if city is None:
         abort(404)
@@ -53,7 +53,7 @@ def cities_delete(city_id):
     strict_slashes=False
 )
 def cities_post(state_id):
-    """Creates State object upon POST request"""
+    """Creates City object upon POST request"""
     state = storage.get(State, state_id)
     if state is None:
         abort(404)
