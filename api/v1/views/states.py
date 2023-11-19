@@ -49,7 +49,7 @@ def states_delete(state_id):
 @app_views.route('/states', methods=['POST'], strict_slashes=False)
 def states_post():
     """Creates State object upon POST request"""
-    if not request.get_json:
+    if not request.get_json():
         abort(400, description='Not a JSON')
     elif 'name' not in request.get_json():
         abort(400, 'Missing name')
