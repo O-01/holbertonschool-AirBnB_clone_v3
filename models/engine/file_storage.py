@@ -84,13 +84,6 @@ class FileStorage:
                     for value in self.all(cls).values()
                     if value.id == id
                 )
-            # key = f'{cls.__name__}.{id}'
-            # obj_dict = self.all(classes[cls.__name__])
-            # req_obj = None
-            # for item in obj_dict.keys():
-            #     if item == key:
-            #         req_obj = self.all()[item]
-            # if req_obj is not None:
                 return req_obj
             except StopIteration:
                 return None
