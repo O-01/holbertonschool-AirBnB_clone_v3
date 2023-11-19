@@ -1,8 +1,7 @@
 #!/usr/bin/python3
 """ """
 from api.v1.views import app_views
-from flask import abort, jsonify
-# , request
+from flask import abort, jsonify, make_response
 from models import storage
 from models.state import State
 
@@ -43,12 +42,14 @@ def states_delete(state_id):
         abort(404)
     else:
         storage.delete(state)
-        return jsonify({}), 200
+        storage.save()
+        return make_response(jsonify({}), 200)
 
 
 @app_views.route('/states', methods=['POST'], strict_slashes=False)
 def states_post():
     """Creates State object upon POST request"""
+    pass
 
 
 @app_views.route(
@@ -58,3 +59,4 @@ def states_post():
 )
 def states_put(state_id):
     """Updates specified State object if found upon PUT request"""
+    pass
