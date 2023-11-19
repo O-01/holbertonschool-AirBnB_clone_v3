@@ -128,7 +128,15 @@ class TestFileStorage(unittest.TestCase):
     @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
     def test_get(self):
         """Test that get properly retrieves expected key"""
+        with self.assertRaises(StopIteration):
+            obj = next(
+                val for val in models.storage.all().values()
+                if val is not None
+            )
+            print(obj)
+        self.assertEqual(models.storage.get(City, 'test'), None)
 
     @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
     def test_count(self):
         """Test that count properly retrieves number of requested objects"""
+        self.assertTrue(type(models.storage.count()) is int)
