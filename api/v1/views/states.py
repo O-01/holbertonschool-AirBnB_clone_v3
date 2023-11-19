@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """ """
 from api.v1.views import app_views
-from flask import abort, jsonify, make_response
+from flask import abort, jsonify, make_response, request
 from models import storage
 from models.state import State
 
@@ -49,7 +49,14 @@ def states_delete(state_id):
 @app_views.route('/states', methods=['POST'], strict_slashes=False)
 def states_post():
     """Creates State object upon POST request"""
-    pass
+    if not request.get_json:
+        abort(400, description='Not a JSON')
+    elif 'name' not in request.get_json():
+        abort(400, 'Missing name')
+    else:
+        new_state = State(**request.get_json())
+        new_state.save()
+        return make_response(jsonify(new_state.to_dict()), 201)
 
 
 @app_views.route(
@@ -59,4 +66,16 @@ def states_post():
 )
 def states_put(state_id):
     """Updates specified State object if found upon PUT request"""
-    pass
+    state = storage.get(State, state_id)
+    if state is None:
+        abort(404)
+    elif not request.get_json():
+        abort(400, description='Not a JSON')
+    else:
+        [
+            setattr(state, key, value)
+            for key, value in request.get_json().items()
+            if key not in ['id', 'created_at', 'updated_at']
+        ]
+        storage.save()
+        return make_response(jsonify(state.to_dict()), 200)
