@@ -67,6 +67,17 @@ test_file_storage.py'])
             self.assertTrue(len(func[1].__doc__) >= 1,
                             "{:s} method needs a docstring".format(func[0]))
 
+    def test_doc_string(self):
+        """ tests docstrings for module, class, & class methods """
+        self.assertTrue(len(FileStorage.__doc__) > 0)
+        self.assertTrue(len(FileStorage.all.__doc__) > 0)
+        self.assertTrue(len(FileStorage.new.__doc__) > 0)
+        self.assertTrue(len(FileStorage.save.__doc__) > 0)
+        self.assertTrue(len(FileStorage.reload.__doc__) > 0)
+        self.assertTrue(len(FileStorage.delete.__doc__) > 0)
+        self.assertTrue(len(FileStorage.get.__doc__) > 0)
+        self.assertTrue(len(FileStorage.count.__doc__) > 0)
+
 
 class TestFileStorage(unittest.TestCase):
     """Test the FileStorage class"""
@@ -117,7 +128,30 @@ class TestFileStorage(unittest.TestCase):
     @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
     def test_get(self):
         """Test that get properly retrieves expected key"""
+        obj = City()
+        obj.save()
+        self.assertEqual(
+            models.storage.get(City, obj.id).id, obj.id
+        )
 
     @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
     def test_count(self):
         """Test that count properly retrieves number of requested objects"""
+        count1 = models.storage.count()
+        city_count1 = models.storage.count(City)
+        obj = City()
+        obj.save()
+        count2 = models.storage.count()
+        city_count2 = models.storage.count(City)
+        self.assertTrue(type(count1) is int)
+        self.assertTrue(type(city_count1) is int)
+        self.assertTrue(type(count2) is int)
+        self.assertTrue(type(city_count2) is int)
+        self.assertGreater(count2, count1)
+        obj.delete()
+        count3 = models.storage.count()
+        city_count3 = models.storage.count(City)
+        self.assertTrue(type(count3) is int)
+        self.assertTrue(type(city_count3) is int)
+        self.assertEqual(count1, count3)
+        self.assertEqual(city_count1, city_count3)
