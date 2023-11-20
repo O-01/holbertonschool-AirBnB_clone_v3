@@ -76,15 +76,18 @@ class FileStorage:
         self.reload()
 
     def get(self, cls, id):
-        """retrieve one object based on cls and id"""
+        """
+        Retrieves corresponding object based on the object's class (cls)
+        and its UUID4 identifier (id)
+        """
         if cls in classes.values():
             try:
-                req_obj = next(
-                    value
-                    for value in self.all(cls).values()
-                    if value.id == id
+                requested_object = next(
+                    instance
+                    for instance in self.all(cls).values()
+                    if instance.id == id
                 )
-                return req_obj
+                return requested_object
             except StopIteration:
                 return None
         else:
