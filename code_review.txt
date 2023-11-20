@@ -1,0 +1,6 @@
+Storage_get_count branch review pull
+request #31 for O-01 (Sam Ansari):
+
+The get and count methods added are mostly clear and concise.
+The use of next in the get methods could use some explanation for
+those unfamiliar with this function.
